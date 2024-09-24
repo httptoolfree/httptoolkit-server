@@ -14,7 +14,7 @@ import {
     getUpstreamTlsOptions as getUpstreamMockttpTlsOptions
 } from 'mockttp/dist/rules/passthrough-handling';
 import { getAgent } from 'mockttp/dist/rules/http-agents';
-import { getEffectivePort } from 'mockttp/dist/util/request-utils';
+import { getEffectivePort } from 'mockttp/dist/util/url';
 
 import {
     ClientProxyConfig,
@@ -84,7 +84,10 @@ export class HttpClient {
             effectivePort,
             options.ignoreHostHttpsErrors ?? []
         );
-        const caConfig = this.getCaConfig(options.trustAdditionalCAs);
+        const caConfig = this.getCaConfig(
+            options.additionalTrustedCAs ||
+            options.trustAdditionalCAs
+        );
 
         const agent = await getAgent({
             protocol: url.protocol as 'http:' | 'https:',
